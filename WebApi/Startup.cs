@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Persistence;
 
 namespace WebApi;
@@ -16,9 +17,7 @@ public class Startup
     {
         // Add database context and connection string
         services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(
-                Configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         // Add controllers and related services
         services.AddControllers();

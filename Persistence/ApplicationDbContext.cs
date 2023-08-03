@@ -24,6 +24,11 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Machinery>()
             .HasMany(e => e.Orders)
             .WithMany(e => e.Machineries);
+        
+        modelBuilder.Entity<Machinery>()
+            .HasMany(e => e.ImagesUrls)
+            .WithOne(e => e.Machinery)
+            .HasForeignKey(e => e.MachineryId);
 
         modelBuilder.Entity<Seller>()
             .HasMany(e => e.Machineries)
@@ -36,5 +41,7 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(e => e.BuyerId);
         
         base.OnModelCreating(modelBuilder);
+        
+        HeavyDutyRentDbContextSeedData.Seed(modelBuilder);
     }
 }
