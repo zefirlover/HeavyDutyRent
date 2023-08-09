@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Interfaces;
+using Domain.Model;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Persistence;
+using Persistence.Repositories;
 
 namespace WebApi;
 
@@ -21,10 +24,13 @@ public class Startup
 
         // Add controllers and related services
         services.AddControllers();
+        
+        // Dependency Injection Setup
+        services.AddScoped<IGenericRepository<Buyer>, GenericRepository<Buyer>>();
 
         // Add any other services your application needs here
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c => { c.EnableAnnotations(); });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
