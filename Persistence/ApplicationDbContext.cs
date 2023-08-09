@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
