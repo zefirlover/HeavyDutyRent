@@ -88,4 +88,30 @@ public class BuyerController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, "Error creating new buyer record");
         }
     }
+
+    [HttpDelete("{id:int}")]
+    [SwaggerOperation(Summary = "Delete a buyer by ID", Description = "Deletes a specific buyer by their ID.")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Buyer))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult DeleteBuyerById(int id)
+    {
+        try
+        {
+            var buyerToDelete = _buyerRepository.GetById(id);
+
+            if (buyerToDelete == null)
+            {
+                return NotFound($"Employee with Id = {id} not found");
+            }
+
+            _buyerRepository.Remove(buyerToDelete); // Remove the buyer from the repository
+            _buyerRepository.SaveChanges(); // Save changes to the database
+
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting data");
+        }
+    }
 }
