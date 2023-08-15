@@ -40,4 +40,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         _dbContext.Set<T>().RemoveRange(entities);
     }
+    
+    public void SaveChanges()
+    {
+        _dbContext.SaveChanges();
+    }
 }
