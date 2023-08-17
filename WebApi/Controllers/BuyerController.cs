@@ -127,24 +127,27 @@ public class BuyerController : ControllerBase
             {
                 return NotFound();
             }
-            /* think about validation rules
-            var existingUserByUsername = _buyerRepository.FindBy(user => user.UserName == buyerDto.UserName).FirstOrDefault();
+            
+            var existingUserByUsername = _buyerRepository.FindBy(user =>
+                user.Id != id && user.UserName == buyerDto.UserName).FirstOrDefault();
             if (existingUserByUsername != null)
             {
                 return BadRequest("Username is already in use.");
             }
 
-            var existingUserByEmail = _buyerRepository.FindBy(user => user.Email == buyerDto.Email).FirstOrDefault();
+            var existingUserByEmail = _buyerRepository.FindBy(user =>
+                user.Id != id && user.Email == buyerDto.Email).FirstOrDefault();
             if (existingUserByEmail != null)
             {
                 return BadRequest("Email is already in use.");
             }
 
-            var existingUserByPhoneNumber = _buyerRepository.FindBy(user => user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
+            var existingUserByPhoneNumber = _buyerRepository.FindBy(user =>
+                user.Id != id && user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
             if (existingUserByPhoneNumber != null)
             {
                 return BadRequest("Phone number is already in use.");
-            }*/
+            }
 
             // Update the existing buyer properties
             existingBuyer.Name = buyerDto.Name;
@@ -199,5 +202,26 @@ public class BuyerController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Error deleting data");
         }
+    }
+    
+    [HttpDelete("delete-range")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerOperation(
+        Summary = "Delete a range of buyers",
+        Description = "Deletes a range of buyers based on the provided IDs.",
+        OperationId = "DeleteRange")]
+    public IActionResult DeleteRange([FromBody] List<int> buyerIds)
+    {
+        if (buyerIds == null || !buyerIds.Any())
+        {
+            return BadRequest("Invalid buyer IDs.");
+        }
+
+        var buyersToDelete = _buyerRepository.FindBy(b => buyerIds.Contains(b.Id)).ToList();
+        _buyerRepository.RemoveRange(buyersToDelete);
+        _buyerRepository.SaveChanges();
+
+        return NoContent();
     }
 }
