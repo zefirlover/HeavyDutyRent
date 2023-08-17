@@ -1,7 +1,6 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces;
 using Domain.Model;
-using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -75,11 +74,6 @@ public class BuyerController : ControllerBase
             if (existingUserByPhoneNumber != null)
             {
                 return BadRequest("Phone number is already in use.");
-            }
-            
-            if (!ValidationUtility.IsValidEmailFormat(buyerDto.Email))
-            {
-                return BadRequest("Invalid email format. Valid format: example@example.com");
             }
 
             var buyer = new Buyer
