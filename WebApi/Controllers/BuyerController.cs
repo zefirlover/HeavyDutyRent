@@ -107,6 +107,74 @@ public class BuyerController : ControllerBase
         }
     }
 
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [SwaggerOperation(
+        Summary = "Update a buyer by ID",
+        Description = "Updates an existing buyer with the provided data.",
+        OperationId = "UpdateBuyer")]
+    public IActionResult UpdateBuyer(int id, [FromBody] BuyerDto buyerDto)
+    {
+        try
+        {
+            if (buyerDto == null) return BadRequest();
+
+            var existingBuyer = _buyerRepository.GetById(id);
+
+            if (existingBuyer == null)
+            {
+                return NotFound();
+            }
+            /* think about validation rules
+            var existingUserByUsername = _buyerRepository.FindBy(user => user.UserName == buyerDto.UserName).FirstOrDefault();
+            if (existingUserByUsername != null)
+            {
+                return BadRequest("Username is already in use.");
+            }
+
+            var existingUserByEmail = _buyerRepository.FindBy(user => user.Email == buyerDto.Email).FirstOrDefault();
+            if (existingUserByEmail != null)
+            {
+                return BadRequest("Email is already in use.");
+            }
+
+            var existingUserByPhoneNumber = _buyerRepository.FindBy(user => user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
+            if (existingUserByPhoneNumber != null)
+            {
+                return BadRequest("Phone number is already in use.");
+            }*/
+
+            // Update the existing buyer properties
+            existingBuyer.Name = buyerDto.Name;
+            existingBuyer.Surname = buyerDto.Surname;
+            existingBuyer.AddressLine = buyerDto.AddressLine;
+
+            existingBuyer.UserName = buyerDto.UserName;
+            existingBuyer.Email = buyerDto.Email;
+            existingBuyer.EmailConfirmed = buyerDto.EmailConfirmed;
+
+            existingBuyer.PasswordHash = buyerDto.PasswordHash;
+
+            existingBuyer.PhoneNumber = buyerDto.PhoneNumber;
+            existingBuyer.PhoneNumberConfirmed = buyerDto.PhoneNumberConfirmed;
+
+            existingBuyer.TwoFactorEnabled = buyerDto.TwoFactorEnabled;
+            existingBuyer.LockoutEnabled = buyerDto.LockoutEnabled;
+            existingBuyer.AccessFailedCount = buyerDto.AccessFailedCount;
+            // Update other properties as needed
+
+            _buyerRepository.SaveChanges();
+
+            return NoContent();
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error creating new buyer record");
+        }
+    }
+    
     [HttpDelete("{id:int}")]
     [SwaggerOperation(Summary = "Delete a buyer by ID", Description = "Deletes a specific buyer by their ID.")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Buyer))]
