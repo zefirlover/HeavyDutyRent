@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces;
 using Domain.Model;
+using Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -57,6 +58,29 @@ public class BuyerController : ControllerBase
         try
         {
             if (buyerDto == null) return BadRequest();
+            
+            var existingUserByUsername = _buyerRepository.FindBy(user => user.UserName == buyerDto.UserName).FirstOrDefault();
+            if (existingUserByUsername != null)
+            {
+                return BadRequest("Username is already in use.");
+            }
+            
+            var existingUserByEmail = _buyerRepository.FindBy(user => user.Email == buyerDto.Email).FirstOrDefault();
+            if (existingUserByEmail != null)
+            {
+                return BadRequest("Email is already in use.");
+            }
+            
+            var existingUserByPhoneNumber = _buyerRepository.FindBy(user => user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
+            if (existingUserByPhoneNumber != null)
+            {
+                return BadRequest("Phone number is already in use.");
+            }
+            
+            if (!ValidationUtility.IsValidEmailFormat(buyerDto.Email))
+            {
+                return BadRequest("Invalid email format. Valid format: example@example.com");
+            }
 
             var buyer = new Buyer
             {
