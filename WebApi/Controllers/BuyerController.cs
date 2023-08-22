@@ -108,7 +108,7 @@ public class BuyerController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [SwaggerOperation(
@@ -170,7 +170,7 @@ public class BuyerController : ControllerBase
 
             _buyerRepository.SaveChanges();
 
-            return NoContent();
+            return Ok(existingBuyer);
         }
         catch (Exception)
         {
@@ -190,7 +190,7 @@ public class BuyerController : ControllerBase
 
             if (buyerToDelete == null)
             {
-                return NotFound($"Employee with Id = {id} not found");
+                return NotFound($"Buyer with Id = {id} not found");
             }
 
             _buyerRepository.Remove(buyerToDelete); // Remove the buyer from the repository
