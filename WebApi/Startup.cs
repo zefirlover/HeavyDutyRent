@@ -28,6 +28,7 @@ public class Startup
         // Dependency Injection Setup
         services.AddScoped<IGenericRepository<Buyer>, GenericRepository<Buyer>>();
         services.AddScoped<IGenericRepository<Seller>, GenericRepository<Seller>>();
+        services.AddScoped<IGenericRepository<Category>, GenericRepository<Category>>();
 
         // Add any other services your application needs here
         services.AddEndpointsApiExplorer();
