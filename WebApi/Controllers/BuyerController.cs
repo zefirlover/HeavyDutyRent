@@ -58,20 +58,20 @@ public class BuyerController : ControllerBase
         {
             if (buyerDto == null) return BadRequest();
             
-            var existingUserByUsername = _buyerRepository.FindBy(user => user.UserName == buyerDto.UserName).FirstOrDefault();
-            if (existingUserByUsername != null)
+            var existingBuyerByUsername = _buyerRepository.FindBy(buyer => buyer.UserName == buyerDto.UserName).FirstOrDefault();
+            if (existingBuyerByUsername != null)
             {
                 return BadRequest("Username is already in use.");
             }
             
-            var existingUserByEmail = _buyerRepository.FindBy(user => user.Email == buyerDto.Email).FirstOrDefault();
-            if (existingUserByEmail != null)
+            var existingBuyerByEmail = _buyerRepository.FindBy(buyer => buyer.Email == buyerDto.Email).FirstOrDefault();
+            if (existingBuyerByEmail != null)
             {
                 return BadRequest("Email is already in use.");
             }
             
-            var existingUserByPhoneNumber = _buyerRepository.FindBy(user => user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
-            if (existingUserByPhoneNumber != null)
+            var existingBuyerByPhoneNumber = _buyerRepository.FindBy(buyer => buyer.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
+            if (existingBuyerByPhoneNumber != null)
             {
                 return BadRequest("Phone number is already in use.");
             }
@@ -128,23 +128,23 @@ public class BuyerController : ControllerBase
                 return NotFound();
             }
             
-            var existingUserByUsername = _buyerRepository.FindBy(user =>
-                user.Id != id && user.UserName == buyerDto.UserName).FirstOrDefault();
-            if (existingUserByUsername != null)
+            var existingBuyerByUsername = _buyerRepository.FindBy(buyer =>
+                buyer.Id != id && buyer.UserName == buyerDto.UserName).FirstOrDefault();
+            if (existingBuyerByUsername != null)
             {
                 return BadRequest("Username is already in use.");
             }
 
-            var existingUserByEmail = _buyerRepository.FindBy(user =>
-                user.Id != id && user.Email == buyerDto.Email).FirstOrDefault();
-            if (existingUserByEmail != null)
+            var existingBuyerByEmail = _buyerRepository.FindBy(buyer =>
+                buyer.Id != id && buyer.Email == buyerDto.Email).FirstOrDefault();
+            if (existingBuyerByEmail != null)
             {
                 return BadRequest("Email is already in use.");
             }
 
-            var existingUserByPhoneNumber = _buyerRepository.FindBy(user =>
-                user.Id != id && user.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
-            if (existingUserByPhoneNumber != null)
+            var existingBuyerByPhoneNumber = _buyerRepository.FindBy(buyer =>
+                buyer.Id != id && buyer.PhoneNumber == buyerDto.PhoneNumber).FirstOrDefault();
+            if (existingBuyerByPhoneNumber != null)
             {
                 return BadRequest("Phone number is already in use.");
             }

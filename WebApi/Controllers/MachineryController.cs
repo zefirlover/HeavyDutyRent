@@ -163,7 +163,8 @@ public class MachineryController : ControllerBase
             return BadRequest("Invalid machineries IDs.");
         }
 
-        var machineriesToDelete = _machineryRepository.FindBy(m => machineryIds.Contains(m.Id)).ToList();
+        var machineriesToDelete = _machineryRepository.FindBy(
+            machinery => machineryIds.Contains(machinery.Id)).ToList();
         _machineryRepository.RemoveRange(machineriesToDelete);
         _machineryRepository.SaveChanges();
 
