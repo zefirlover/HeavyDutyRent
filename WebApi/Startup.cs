@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces;
+﻿using System.Text.Json.Serialization;
+using Domain.Interfaces;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,12 +24,17 @@ public class Startup
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
         // Add controllers and related services
-        services.AddControllers();
+        services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
         
         // Dependency Injection Setup
         services.AddScoped<IGenericRepository<Buyer>, GenericRepository<Buyer>>();
         services.AddScoped<IGenericRepository<Seller>, GenericRepository<Seller>>();
         services.AddScoped<IGenericRepository<Category>, GenericRepository<Category>>();
+        services.AddScoped<IGenericRepository<Machinery>, GenericRepository<Machinery>>();
 
         // Add any other services your application needs here
         services.AddEndpointsApiExplorer();
