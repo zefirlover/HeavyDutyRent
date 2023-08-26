@@ -57,24 +57,24 @@ public class MachineryController : ControllerBase
         Summary = "Create a new Machinery",
         Description = "Creates a new machinery with the provided data.",
         OperationId = "CreateMachinery")]
-    public IActionResult CreateMachinery([FromBody] MachineryDto machineryDto)
+    public IActionResult CreateMachinery([FromBody] CreateMachineryDto createMachineryDto)
     {
         try
         {
-            if (machineryDto == null) return BadRequest();
+            if (createMachineryDto == null) return BadRequest();
 
-            var seller = _sellerRepository.GetById(machineryDto.SellerId);
+            var seller = _sellerRepository.GetById(createMachineryDto.SellerId);
             if (seller == null)
             {
-                return BadRequest($"Seller with Id = {machineryDto.SellerId} not found");
+                return BadRequest($"Seller with Id = {createMachineryDto.SellerId} not found");
             }
 
             var machinery = new Machinery
             {
-                Name = machineryDto.Name,
-                AddressLine = machineryDto.AddressLine,
-                Price = machineryDto.Price,
-                SellerId = machineryDto.SellerId
+                Name = createMachineryDto.Name,
+                AddressLine = createMachineryDto.AddressLine,
+                Price = createMachineryDto.Price,
+                SellerId = createMachineryDto.SellerId
             };
 
             _machineryRepository.Add(machinery); // Add the buyer to the repository
@@ -96,11 +96,11 @@ public class MachineryController : ControllerBase
         Summary = "Update a machinery by ID",
         Description = "Updates an existing machinery with the provided data.",
         OperationId = "UpdateMachinery")]
-    public IActionResult UpdateMachinery(int id, [FromBody] MachineryDto machineryDto)
+    public IActionResult UpdateMachinery(int id, [FromBody] UpdateMachineryDto updateMachineryDto)
     {
         try
         {
-            if (machineryDto == null) return BadRequest();
+            if (updateMachineryDto == null) return BadRequest();
 
             var existingMachinery = _machineryRepository.GetById(id);
 
@@ -109,9 +109,9 @@ public class MachineryController : ControllerBase
                 return NotFound();
             }
 
-            existingMachinery.Name = machineryDto.Name;
-            existingMachinery.AddressLine = machineryDto.AddressLine;
-            existingMachinery.Price = machineryDto.Price;
+            existingMachinery.Name = updateMachineryDto.Name;
+            existingMachinery.AddressLine = updateMachineryDto.AddressLine;
+            existingMachinery.Price = updateMachineryDto.Price;
 
             _machineryRepository.SaveChanges();
 
