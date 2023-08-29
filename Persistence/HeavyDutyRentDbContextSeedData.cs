@@ -11,5 +11,17 @@ public class HeavyDutyRentDbContextSeedData
         modelBuilder.Entity<Buyer>().HasData(
             new Buyer { Id = 1, Email = "zefirlover@outlook.com", UserName = "zefirlover", Name = "zefir", Surname = "Lover", PhoneNumber = "+380963333333", PasswordHash = "HuskTheBest7355608", PhoneNumberConfirmed = false, TwoFactorEnabled = false, LockoutEnabled = false, AccessFailedCount = 0 }
         );
+
+        modelBuilder.Entity<Seller>().HasData(
+            new Seller { Id = 1, AddressLine = "sample", UserName = "TheSeller", Email = "theseller@gmail.com", PasswordHash = "HuskTheBest75_", PhoneNumber = "+380968886969", PhoneNumberConfirmed = false, TwoFactorEnabled = false, LockoutEnabled = false, AccessFailedCount = 0 }
+        );
+
+        modelBuilder.Entity<Category>().HasData(
+            new Category { Id = 1, Name = "CategoryName" }
+        );
+
+        modelBuilder.Entity<Machinery>().HasData(
+            new Machinery { Id = 1, Name = "Tracktor", AddressLine = "SampleAddress", Price = "300$", SellerId = 1 }
+        );
     }
 }
