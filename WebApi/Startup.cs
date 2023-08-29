@@ -35,6 +35,7 @@ public class Startup
         services.AddScoped<IGenericRepository<Seller>, GenericRepository<Seller>>();
         services.AddScoped<IGenericRepository<Category>, GenericRepository<Category>>();
         services.AddScoped<IGenericRepository<Machinery>, GenericRepository<Machinery>>();
+        services.AddScoped<IGenericRepository<Image>, GenericRepository<Image>>();
 
         // Add any other services your application needs here
         services.AddEndpointsApiExplorer();
