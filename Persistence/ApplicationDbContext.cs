@@ -20,7 +20,8 @@ public class ApplicationDbContext : DbContext
     {
         modelBuilder.Entity<Machinery>()
             .HasMany(e => e.Categories)
-            .WithMany(e => e.Machineries);
+            .WithMany(e => e.Machineries)
+            .UsingEntity(j => j.ToTable("MachineryOrder"));
         
         modelBuilder.Entity<Machinery>()
             .HasMany(e => e.Orders)
