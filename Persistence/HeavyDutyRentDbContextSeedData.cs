@@ -46,19 +46,21 @@ public class HeavyDutyRentDbContextSeedData
             AddressLine = "SampleAddress",
             Price = "300$",
             SellerId = 1,
-            Orders = new List<Order>()
+            //Orders = new List<Order>()
         };
 
+        var timeNow = DateTimeOffset.UtcNow;
         var order = new Order
         {
             Id = 1,
             BuyerId = 1,
-            Status = "test"
+            Status = "test",
+            CreatedAt = timeNow
         };
 
-        machinery.Orders.Add(order);
+        //machinery.Orders.Add(order);
         
-        //modelBuilder.Entity<Machinery>().HasData(machinery);
+        modelBuilder.Entity<Machinery>().HasData(machinery);
         modelBuilder.Entity<Order>().HasData(order);
     }
 }
