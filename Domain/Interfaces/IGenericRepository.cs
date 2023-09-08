@@ -10,5 +10,6 @@ public interface IGenericRepository<T> where T : class
     void Add(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
+    IQueryable<T> Include(params Expression<Func<T, object>>[] includes);
     void SaveChanges();
 }
