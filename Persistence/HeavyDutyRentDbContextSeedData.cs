@@ -19,25 +19,6 @@ public class HeavyDutyRentDbContextSeedData
         modelBuilder.Entity<Category>().HasData(
             new Category { Id = 1, Name = "CategoryName" }
         );
-/*
-        var machinery = new Machinery
-            { Id = 1, Name = "Tracktor", AddressLine = "SampleAddress", Price = "300$", SellerId = 1 };
-        
-        modelBuilder.Entity<Machinery>().HasData(machinery);
-        
-        modelBuilder.Entity<Order>().HasData(
-            new Order { Id = 1, BuyerId = 1, Status = "test", Machineries = new List<Machinery> { machinery }}
-        );*/
-        /*
-        modelBuilder.Entity("MachineryOrder").HasData(
-            new
-            {
-                OrdersId = 1,    // The ID of the order
-                MachineriesId = 1 // The ID of the machinery
-            }
-        );
-        
-        modelBuilder.Entity("MachineryOrder").HasData(new { OrdersId = 1, MachineriesId = 1 });*/
         
         var machinery = new Machinery
         {
@@ -45,8 +26,7 @@ public class HeavyDutyRentDbContextSeedData
             Name = "Tracktor",
             AddressLine = "SampleAddress",
             Price = "300$",
-            SellerId = 1,
-            //Orders = new List<Order>()
+            SellerId = 1
         };
 
         var timeNow = DateTimeOffset.UtcNow;
@@ -57,10 +37,10 @@ public class HeavyDutyRentDbContextSeedData
             Status = "test",
             CreatedAt = timeNow
         };
-
-        //machinery.Orders.Add(order);
         
         modelBuilder.Entity<Machinery>().HasData(machinery);
         modelBuilder.Entity<Order>().HasData(order);
+        
+        // please be sure to check MachineryOrder on database and add a connection between Order and Machinery by hand
     }
 }
