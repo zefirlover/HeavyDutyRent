@@ -23,6 +23,8 @@ public class Startup
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
+        services.AddCors();
+        
         // Add controllers and related services
         services.AddControllers()
             .AddJsonOptions(options =>
@@ -55,6 +57,10 @@ public class Startup
         app.UseRouting();
         app.UseAuthorization();
 
+        app.UseCors(builder => builder
+            .WithOrigins("http://127.0.0.1:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
         
         app.UseEndpoints(endpoints =>
         {

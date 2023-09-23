@@ -11,9 +11,14 @@ namespace WebApi.Controllers;
 public class CategoryController : ControllerBase
 {
     private readonly IGenericRepository<Category> _categoryRepository;
+    private readonly IGenericRepository<Machinery> _machineryRepository;
 
-    public CategoryController(IGenericRepository<Category> categoryRepository)
+    public CategoryController(
+        IGenericRepository<Machinery> machineryRepository,
+        IGenericRepository<Category> categoryRepository
+    )
     {
+        _machineryRepository = machineryRepository;
         _categoryRepository = categoryRepository;
     }
     
@@ -35,14 +40,32 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetCategoryById(int id)
     {
-        var category = _categoryRepository.GetById(id);
+        var category = _categoryRepository
+            .Include(c => c.Machineries)
+            .SingleOrDefault(c => c.Id == id);
 
         if (category == null)
         {
             return NotFound();
         }
 
-        return Ok(category);
+        var categoryDto = new GetCategoryDto
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Machineries = category.Machineries.Select(
+                m => new GetMachineryDto
+                {
+                    Id = m.Id,
+                    Name = m.Name,
+                    AddressLine = m.AddressLine,
+                    Price = m.Price,
+                    SellerId = m.SellerId
+                }
+            ).ToList()
+        };
+
+        return Ok(categoryDto);
     }
     
     [HttpPost]
@@ -56,7 +79,8 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            if (categoryDto == null) return BadRequest();
+            if (categoryDto == null || categoryDto.MachineriesIds == null)
+                return BadRequest("Invalid order data.");
             
             var existingCategoryByName = _categoryRepository.FindBy(category => category.Name == categoryDto.Name).FirstOrDefault();
             if (existingCategoryByName != null)
@@ -69,8 +93,15 @@ public class CategoryController : ControllerBase
                 Name = categoryDto.Name
             };
 
-            _categoryRepository.Add(category); // Add the buyer to the repository
-            _categoryRepository.SaveChanges(); // Save changes to the database using the repository
+            var machineryList = _machineryRepository
+                .GetAll()
+                .Where(m => categoryDto.MachineriesIds.Contains(m.Id))
+                .ToList();
+
+            category.Machineries = machineryList;
+
+            _categoryRepository.Add(category);
+            _categoryRepository.SaveChanges();
 
             return CreatedAtAction(nameof(GetCategoryById), new { id = category.Id }, category);
         }
@@ -92,7 +123,8 @@ public class CategoryController : ControllerBase
     {
         try
         {
-            if (categoryDto == null) return BadRequest();
+            if (categoryDto == null || categoryDto.MachineriesIds == null)
+                return BadRequest("Invalid order data.");
 
             var existingCategory = _categoryRepository.GetById(id);
 
@@ -105,7 +137,36 @@ public class CategoryController : ControllerBase
                 category.Id != id && category.Name == categoryDto.Name).FirstOrDefault();
             if (existingCategoryByName != null)
             {
-                return BadRequest("Username is already in use.");
+                return BadRequest("Name is already in use.");
+            }
+            
+            // Ensure that Machineries collection is initialized
+            if (existingCategory.Machineries == null)
+            {
+                existingCategory.Machineries = new List<Machinery>();
+            }
+
+            // Determine machineries to remove
+            var machineriesToRemove = existingCategory.Machineries
+                .Where(m => !categoryDto.MachineriesIds.Contains(m.Id))
+                .ToList();
+
+            // Determine machineries to add
+            var machineriesToAdd = _machineryRepository
+                .GetAll()
+                .Where(m => categoryDto.MachineriesIds.Contains(m.Id) && !existingCategory.Machineries.Contains(m))
+                .ToList();
+
+            // Remove machineries
+            foreach (var machineryToRemove in machineriesToRemove)
+            {
+                existingCategory.Machineries.Remove(machineryToRemove);
+            }
+
+            // Add machineries
+            foreach (var machineryToAdd in machineriesToAdd)
+            {
+                existingCategory.Machineries.Add(machineryToAdd);
             }
 
             existingCategory.Name = categoryDto.Name;
@@ -114,8 +175,9 @@ public class CategoryController : ControllerBase
 
             return Ok(existingCategory);
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             return StatusCode(StatusCodes.Status500InternalServerError, "Error creating new buyer record");
         }
     }
@@ -135,8 +197,8 @@ public class CategoryController : ControllerBase
                 return NotFound($"Category with Id = {id} not found");
             }
 
-            _categoryRepository.Remove(categoryToDelete); // Remove the buyer from the repository
-            _categoryRepository.SaveChanges(); // Save changes to the database
+            _categoryRepository.Remove(categoryToDelete);
+            _categoryRepository.SaveChanges();
 
             return NoContent();
         }
