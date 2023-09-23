@@ -30,8 +30,28 @@ public class MachineryController : ControllerBase
         OperationId = "GetAllMachineries")]
     public IActionResult GetAllMachineries()
     {
-        var machineries = _machineryRepository.GetAll();
-        return Ok(machineries);
+        //var machineries = _machineryRepository.GetAll();
+        var machineries = _machineryRepository
+            .Include(m => m.ImagesUrls)
+            .ToList();
+        
+        var machineriesDto = machineries.Select(machineries => new GetMachineryDto
+        {
+            Id = machineries.Id,
+            Name = machineries.Name,
+            AddressLine = machineries.AddressLine,
+            Price = machineries.Price,
+            SellerId = machineries.SellerId,
+            Images = machineries.ImagesUrls.Select(
+                u => new ImageDto
+                {
+                    Url = u.Url,
+                    MachineryId = u.MachineryId
+                }
+            ).ToList()
+        }).ToList();
+        
+        return Ok(machineriesDto);
     }
     
     [HttpGet("{id}")]
@@ -40,14 +60,32 @@ public class MachineryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult GetMachineryById(int id)
     {
-        var machinery = _machineryRepository.GetById(id);
+        var machinery = _machineryRepository
+            .Include(m => m.ImagesUrls)
+            .SingleOrDefault(m => m.Id == id);
 
         if (machinery == null)
         {
             return NotFound();
         }
+        
+        var machineryDto = new GetMachineryDto
+        {
+            Id = machinery.Id,
+            Name = machinery.Name,
+            AddressLine = machinery.AddressLine,
+            Price = machinery.Price,
+            SellerId = machinery.SellerId,
+            Images = machinery.ImagesUrls.Select(
+                u => new ImageDto
+                {
+                    Url = u.Url,
+                    MachineryId = u.MachineryId
+                }
+            ).ToList()
+        };
 
-        return Ok(machinery);
+        return Ok(machineryDto);
     }
     
     [HttpPost]
