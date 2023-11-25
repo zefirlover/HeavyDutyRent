@@ -43,6 +43,10 @@ public class CategoryController : ControllerBase
         var category = _categoryRepository
             .Include(c => c.Machineries)
             .SingleOrDefault(c => c.Id == id);
+        
+        var machinery = _machineryRepository
+            .Include(m => m.ImagesUrls)
+            .ToList();
 
         if (category == null)
         {
@@ -64,6 +68,24 @@ public class CategoryController : ControllerBase
                 }
             ).ToList()
         };
+        
+        categoryDto.Machineries = machinery
+            .Where(m => category.Machineries.Any(cm => cm.Id == m.Id))
+            .Select(m => new GetMachineryDto
+            {
+                Id = m.Id,
+                Name = m.Name,
+                AddressLine = m.AddressLine,
+                Price = m.Price,
+                SellerId = m.SellerId,
+                Images = m.ImagesUrls.Select(
+                    u => new ImageDto
+                    {
+                        Url = u.Url,
+                        MachineryId = u.MachineryId
+                    }
+                ).ToList()
+            }).ToList();
 
         return Ok(categoryDto);
     }

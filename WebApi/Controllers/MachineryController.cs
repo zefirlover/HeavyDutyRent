@@ -30,7 +30,6 @@ public class MachineryController : ControllerBase
         OperationId = "GetAllMachineries")]
     public IActionResult GetAllMachineries()
     {
-        //var machineries = _machineryRepository.GetAll();
         var machineries = _machineryRepository
             .Include(m => m.ImagesUrls)
             .ToList();

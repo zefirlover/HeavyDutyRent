@@ -58,7 +58,8 @@ public class Startup
         app.UseAuthorization();
 
         app.UseCors(builder => builder
-            .WithOrigins("http://127.0.0.1:5173")
+            //.WithOrigins("http://127.0.0.1:5173")
+            .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
         
