@@ -96,8 +96,8 @@ public class BuyerController : ControllerBase
                 AccessFailedCount = buyerDto.AccessFailedCount
             };
 
-            _buyerRepository.Add(buyer); // Add the buyer to the repository
-            _buyerRepository.SaveChanges(); // Save changes to the database using the repository
+            _buyerRepository.Add(buyer);
+            _buyerRepository.SaveChanges();
 
             return CreatedAtAction(nameof(GetBuyerById), new { id = buyer.Id }, buyer);
         }
@@ -149,7 +149,6 @@ public class BuyerController : ControllerBase
                 return BadRequest("Phone number is already in use.");
             }
 
-            // Update the existing buyer properties
             existingBuyer.Name = buyerDto.Name;
             existingBuyer.Surname = buyerDto.Surname;
             existingBuyer.AddressLine = buyerDto.AddressLine;
@@ -166,7 +165,6 @@ public class BuyerController : ControllerBase
             existingBuyer.TwoFactorEnabled = buyerDto.TwoFactorEnabled;
             existingBuyer.LockoutEnabled = buyerDto.LockoutEnabled;
             existingBuyer.AccessFailedCount = buyerDto.AccessFailedCount;
-            // Update other properties as needed
 
             _buyerRepository.SaveChanges();
 
@@ -193,8 +191,8 @@ public class BuyerController : ControllerBase
                 return NotFound($"Buyer with Id = {id} not found");
             }
 
-            _buyerRepository.Remove(buyerToDelete); // Remove the buyer from the repository
-            _buyerRepository.SaveChanges(); // Save changes to the database
+            _buyerRepository.Remove(buyerToDelete);
+            _buyerRepository.SaveChanges();
 
             return NoContent();
         }

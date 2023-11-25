@@ -2,7 +2,6 @@
 using Domain.Interfaces;
 using Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Persistence;
 using Persistence.Repositories;
 
@@ -40,7 +39,7 @@ public class Startup
         services.AddScoped<IGenericRepository<Image>, GenericRepository<Image>>();
         services.AddScoped<IGenericRepository<Order>, GenericRepository<Order>>();
 
-        // Add any other services your application needs here
+        // Add any other services the application needs here
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(c => { c.EnableAnnotations(); });
     }
@@ -58,7 +57,6 @@ public class Startup
         app.UseAuthorization();
 
         app.UseCors(builder => builder
-            //.WithOrigins("http://127.0.0.1:5173")
             .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
@@ -67,8 +65,5 @@ public class Startup
         {
             endpoints.MapControllers();
         });
-        
-        
-        //app.Run();
     }
 }

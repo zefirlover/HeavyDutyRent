@@ -95,8 +95,8 @@ public class SellerController : ControllerBase
                 AccessFailedCount = sellerDto.AccessFailedCount
             };
 
-            _sellerRepository.Add(seller); // Add the buyer to the repository
-            _sellerRepository.SaveChanges(); // Save changes to the database using the repository
+            _sellerRepository.Add(seller);
+            _sellerRepository.SaveChanges();
 
             return CreatedAtAction(nameof(GetSellerById), new { id = seller.Id }, seller);
         }
@@ -148,7 +148,6 @@ public class SellerController : ControllerBase
                 return BadRequest("Phone number is already in use.");
             }
 
-            // Update the existing buyer properties
             existingSeller.AddressLine = sellerDto.AddressLine;
             existingSeller.LogoUrl = sellerDto.LogoUrl;
 
@@ -164,7 +163,6 @@ public class SellerController : ControllerBase
             existingSeller.TwoFactorEnabled = sellerDto.TwoFactorEnabled;
             existingSeller.LockoutEnabled = sellerDto.LockoutEnabled;
             existingSeller.AccessFailedCount = sellerDto.AccessFailedCount;
-            // Update other properties as needed
 
             _sellerRepository.SaveChanges();
 
@@ -191,8 +189,8 @@ public class SellerController : ControllerBase
                 return NotFound($"Seller with Id = {id} not found");
             }
 
-            _sellerRepository.Remove(sellerToDelete); // Remove the buyer from the repository
-            _sellerRepository.SaveChanges(); // Save changes to the database
+            _sellerRepository.Remove(sellerToDelete);
+            _sellerRepository.SaveChanges();
 
             return NoContent();
         }

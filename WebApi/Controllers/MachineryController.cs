@@ -114,8 +114,8 @@ public class MachineryController : ControllerBase
                 SellerId = createMachineryDto.SellerId
             };
 
-            _machineryRepository.Add(machinery); // Add the buyer to the repository
-            _machineryRepository.SaveChanges(); // Save changes to the database using the repository
+            _machineryRepository.Add(machinery);
+            _machineryRepository.SaveChanges();
 
             return CreatedAtAction(nameof(GetMachineryById), new { id = machinery.Id }, machinery);
         }
