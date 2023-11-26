@@ -39,13 +39,21 @@ dotnet ef migrations add MigrationName --project "Persistence" --startup-project
 dotnet restore
 ```
 
-5. Run the following command to build the project:
+5. Add your **OpenAI API key** to `appsettings.json` in *WebApi* project **(optional)**:
+
+```
+"OpenAI": {
+    "ApiKey": "your-api-key"
+  }
+```
+
+6. Run the following command to build the project:
 
 ```
 dotnet build
 ```
 
-6. Run the following command to run the project:
+7. Run the following command to run the project:
 
 ```
 dotnet run
