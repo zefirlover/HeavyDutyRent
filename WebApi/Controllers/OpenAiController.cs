@@ -26,11 +26,20 @@ public class OpenAiController : ControllerBase
     {
         var outputResult = "";
         var openai = new OpenAIAPI(_configuration["OpenAI:ApiKey"]);
+        var messages = new[]
+        {
+            new { role = "system", content = "You are a helpful assistant." },
+            new { role = "system", content = "You are working on online service for renting construction, work and agricultural equipment" },
+            // new { role = "user", content = "Hello" },
+        };
+        var context = string.Join("\n", messages.Select(msg => $"{msg.role}: {msg.content}"));
+        var promptWithContext = $"{context}\nUser: {query}";
+
         var completionRequest = new CompletionRequest
         {
-            Prompt = query,
+            Prompt = promptWithContext,
             Model = OpenAI_API.Models.Model.DavinciText,
-            MaxTokens = 512
+            MaxTokens = 256
         };
 
         var completions = await openai.Completions.CreateCompletionAsync(completionRequest);
@@ -41,6 +50,5 @@ public class OpenAiController : ControllerBase
         }
 
         return Ok(outputResult);
-
     }
 }
